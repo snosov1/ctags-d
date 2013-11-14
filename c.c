@@ -3022,7 +3022,7 @@ extern parserDefinition* CParser (void)
 
 extern parserDefinition* DParser (void)
 {
-     static const char *const extensions [] = { "d", NULL };
+     static const char *const extensions [] = { "d", "di", NULL };
      parserDefinition* def = parserNew ("D");
      def->kinds      = CKinds;
      def->kindCount  = KIND_COUNT (CKinds);
