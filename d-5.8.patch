@@ -10,35 +10,35 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  	KEYWORD_BOOLEAN, KEYWORD_BYTE, KEYWORD_BAD_STATE, KEYWORD_BAD_TRANS,
  	KEYWORD_BIND, KEYWORD_BIND_VAR, KEYWORD_BIT,
  	KEYWORD_CASE, KEYWORD_CATCH, KEYWORD_CHAR, KEYWORD_CLASS, KEYWORD_CONST,
-@@ -91,7 +91,19 @@
+@@ -91,5 +91,17 @@
  	KEYWORD_UINT, KEYWORD_ULONG, KEYWORD_UNION, KEYWORD_UNSIGNED, KEYWORD_USHORT,
  	KEYWORD_USING,
  	KEYWORD_VIRTUAL, KEYWORD_VOID, KEYWORD_VOLATILE,
 -	KEYWORD_WCHAR_T, KEYWORD_WHILE
 +	KEYWORD_WCHAR_T, KEYWORD_WHILE,
-+    KEYWORD_ALIGN, KEYWORD_ASM, KEYWORD_ASSERT, KEYWORD_AUTO, 
-+    KEYWORD_BODY, KEYWORD_BOOL, KEYWORD_BREAK, KEYWORD_CAST, 
-+    KEYWORD_CDOUBLE, KEYWORD_CENT, KEYWORD_CFLOAT, KEYWORD_CONTINUE, 
-+    KEYWORD_CREAL, KEYWORD_DCHAR, KEYWORD_DEBUG, 
-+    KEYWORD_DEPRECATED, KEYWORD_EXPORT, KEYWORD_FALSE, KEYWORD_FINALLY, 
-+    KEYWORD_FOREACH_REVERSE, KEYWORD_IDOUBLE, KEYWORD_IFLOAT, 
-+    KEYWORD_IN, KEYWORD_INVARIANT, KEYWORD_IREAL, KEYWORD_IS, 
-+    KEYWORD_LAZY, KEYWORD_MIXIN, KEYWORD_MODULE, KEYWORD_NULL, 
-+    KEYWORD_OUT, KEYWORD_PRAGMA, KEYWORD_REAL, KEYWORD_SCOPE, 
-+    KEYWORD_SUPER, KEYWORD_TRUE, KEYWORD_TYPEID, KEYWORD_TYPEOF, 
-+    KEYWORD_UBYTE, KEYWORD_UCENT, KEYWORD_UNITTEST, KEYWORD_VERSION, 
++    KEYWORD_ALIGN, KEYWORD_ASM, KEYWORD_ASSERT, KEYWORD_AUTO,
++    KEYWORD_BODY, KEYWORD_BOOL, KEYWORD_BREAK, KEYWORD_CAST,
++    KEYWORD_CDOUBLE, KEYWORD_CENT, KEYWORD_CFLOAT, KEYWORD_CONTINUE,
++    KEYWORD_CREAL, KEYWORD_DCHAR, KEYWORD_DEBUG,
++    KEYWORD_DEPRECATED, KEYWORD_EXPORT, KEYWORD_FALSE, KEYWORD_FINALLY,
++    KEYWORD_FOREACH_REVERSE, KEYWORD_IDOUBLE, KEYWORD_IFLOAT,
++    KEYWORD_IN, KEYWORD_INVARIANT, KEYWORD_IREAL, KEYWORD_IS,
++    KEYWORD_LAZY, KEYWORD_MIXIN, KEYWORD_MODULE, KEYWORD_NULL,
++    KEYWORD_OUT, KEYWORD_PRAGMA, KEYWORD_REAL, KEYWORD_SCOPE,
++    KEYWORD_SUPER, KEYWORD_TRUE, KEYWORD_TYPEID, KEYWORD_TYPEOF,
++    KEYWORD_UBYTE, KEYWORD_UCENT, KEYWORD_UNITTEST, KEYWORD_VERSION,
 +    KEYWORD_WCHAR, KEYWORD_WITH
  } keywordId;
- 
+
  /*  Used to determine whether keyword is valid for the current language and
-@@ -100,7 +112,7 @@
+@@ -100,5 +112,5 @@
  typedef struct sKeywordDesc {
  	const char *name;
  	keywordId id;
 -	short isValid [5]; /* indicates languages for which kw is valid */
 +	short isValid [6]; /* indicates languages for which kw is valid */
  } keywordDesc;
- 
+
  /*  Used for reporting the type of object parsed by nextToken ().
 @@ -115,7 +127,7 @@
  	TOKEN_DOUBLE_COLON,  /* double colon indicates nested-name-specifier */
@@ -49,7 +49,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  	TOKEN_PAREN_NAME,    /* a single name in parentheses */
  	TOKEN_SEMICOLON,     /* the semicolon character */
  	TOKEN_SPEC,          /* a storage class specifier, qualifier, type, etc. */
-@@ -140,15 +152,19 @@
+@@ -140,14 +152,18 @@
  	DECL_ENUM,
  	DECL_EVENT,
  	DECL_FUNCTION,
@@ -68,7 +68,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +	DECL_VERSION, /* D conditional compile */
  	DECL_COUNT
  } declType;
- 
+
 @@ -218,10 +234,12 @@
  	TAG_EVENT,       /* event */
  	TAG_FIELD,       /* field (Java) */
@@ -82,7 +82,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  	TAG_NAMESPACE,   /* namespace name */
  	TAG_PACKAGE,     /* package name */
  	TAG_PROGRAM,     /* program name */
-@@ -230,9 +248,11 @@
+@@ -230,8 +248,10 @@
  	TAG_STRUCT,      /* structure name */
  	TAG_TASK,        /* task name */
  	TAG_TYPEDEF,     /* typedef name */
@@ -93,7 +93,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +	TAG_VERSION, 	/* conditional template compilation */
  	TAG_COUNT        /* must be last */
  } tagType;
- 
+
 @@ -255,6 +275,7 @@
  static langType Lang_c;
  static langType Lang_cpp;
@@ -102,7 +102,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  static langType Lang_java;
  static langType Lang_vera;
  static vString *Signature;
-@@ -267,9 +288,9 @@
+@@ -267,7 +288,7 @@
  typedef enum {
  	CK_UNDEFINED = -1,
  	CK_CLASS, CK_DEFINE, CK_ENUMERATOR, CK_FUNCTION,
@@ -113,9 +113,9 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +	CK_STRUCT, CK_TYPEDEF, CK_TEMPLATE, CK_UNION, CK_VARIABLE,
 +	CK_EXTERN_VARIABLE, CK_MIXIN, CK_VERSION
  } cKind;
- 
+
  static kindOption CKinds [] = {
-@@ -280,13 +301,17 @@
+@@ -280,11 +301,15 @@
  	{ TRUE,  'g', "enum",       "enumeration names"},
  	{ FALSE, 'l', "local",      "local variables"},
  	{ TRUE,  'm', "member",     "class, struct, and union members"},
@@ -131,11 +131,11 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +	{ TRUE,  'X', "mixin", 		"mixin"},
 +	{ TRUE,  'V', "version", 	"conditional compilation"}
  };
- 
+
  typedef enum {
-@@ -356,110 +381,155 @@
+@@ -356,1 +381,1 @@
  };
- 
+
  static const keywordDesc KeywordTable [] = {
 -	/*                                              C++            */
 -	/*                                       ANSI C  |  C# Java    */
@@ -391,7 +391,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +     { "while",		KEYWORD_WHILE,		{ 1, 1, 1, 1, 1, 0 } },
 +     { "with",		KEYWORD_WITH,		{ 0, 0, 0, 1, 0, 0 } },
  };
- 
+
  /*
 @@ -595,7 +665,7 @@
  	static const char *const names [] = {
@@ -402,7 +402,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  	};
  	Assert (sizeof (names) / sizeof (names [0]) == DECL_COUNT);
  	Assert ((int) declaration < DECL_COUNT);
-@@ -671,6 +741,8 @@
+@@ -671,5 +741,7 @@
  		case KEYWORD_NAMESPACE:
  		case KEYWORD_STRUCT:
  		case KEYWORD_UNION:
@@ -410,15 +410,15 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +		case KEYWORD_TEMPLATE:
  			result = TRUE;
  			break;
- 
-@@ -690,6 +762,7 @@
+
+@@ -690,5 +762,6 @@
  		case DECL_NAMESPACE:
  		case DECL_STRUCT:
  		case DECL_UNION:
 +		case DECL_TEMPLATE:
  			result = TRUE;
  			break;
- 
+
 @@ -725,6 +798,8 @@
  		case DECL_CLASS:
  			if (isLanguage (Lang_java))
@@ -428,7 +428,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  			else
  				accessDefault = ACCESS_PRIVATE;
  			break;
-@@ -807,13 +882,17 @@
+@@ -807,10 +882,14 @@
  		case TAG_FUNCTION:   result = CK_FUNCTION;    break;
  		case TAG_LOCAL:      result = CK_LOCAL;       break;
  		case TAG_MEMBER:     result = CK_MEMBER;      break;
@@ -443,10 +443,10 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +		case TAG_MIXIN:		 result = CK_MIXIN; 	  break;
  		case TAG_EXTERN_VAR: result = CK_EXTERN_VARIABLE; break;
 +		case TAG_VERSION:    result = CK_VERSION;     break;
- 
+
  		default: Assert ("Bad C tag type" == NULL); break;
  	}
-@@ -938,12 +1017,15 @@
+@@ -938,9 +1017,12 @@
  		case DECL_ENUM:         type = TAG_ENUM;        break;
  		case DECL_EVENT:        type = TAG_EVENT;       break;
  		case DECL_FUNCTION:     type = TAG_FUNCTION;    break;
@@ -459,11 +459,11 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  		case DECL_STRUCT:       type = TAG_STRUCT;      break;
  		case DECL_UNION:        type = TAG_UNION;       break;
 +		case DECL_VERSION: 		type = TAG_VERSION; 	break;
- 
+
  		default: Assert ("Unexpected declaration" == NULL); break;
  	}
-@@ -962,7 +1044,7 @@
- 
+@@ -962,0 +1044,0 @@
+
  static void addContextSeparator (vString *const scope)
  {
 -	if (isLanguage (Lang_c)  ||  isLanguage (Lang_cpp))
@@ -471,9 +471,9 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  		vStringCatS (scope, "::");
  	else if (isLanguage (Lang_java) || isLanguage (Lang_csharp))
  		vStringCatS (scope, ".");
-@@ -980,6 +1062,7 @@
+@@ -980,1 +1062,1 @@
  		default: break;
- 
+
  		case TAG_FUNCTION:
 +		case TAG_TEMPLATE:
  		case TAG_METHOD:
@@ -488,10 +488,10 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  			qualifyCompoundTag (st, nameToken);
  			break;
  		default: break;
-@@ -1535,6 +1620,34 @@
+@@ -1535,2 +1620,2 @@
  	}
  }
- 
+
 +static void readVersionName (tokenInfo *const token, const int firstChar)
 +{
 +	vString *const name = token->name;
@@ -531,28 +531,28 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  		case KEYWORD_PRIVATE:   setAccess (st, ACCESS_PRIVATE);         break;
  		case KEYWORD_PROGRAM:   st->declaration = DECL_PROGRAM;         break;
  		case KEYWORD_PROTECTED: setAccess (st, ACCESS_PROTECTED);       break;
-@@ -1760,17 +1874,23 @@
+@@ -1760,8 +1874,13 @@
  		case KEYWORD_USING:     skipStatement (st);                     break;
  		case KEYWORD_VOID:      st->declaration = DECL_BASE;            break;
  		case KEYWORD_VOLATILE:  st->declaration = DECL_BASE;            break;
 +		case KEYWORD_VERSION:	readVersion(st); 						break;
  		case KEYWORD_VIRTUAL:   st->implementation = IMP_VIRTUAL;       break;
  		case KEYWORD_WCHAR_T:   st->declaration = DECL_BASE;            break;
--		
-+		case KEYWORD_TEMPLATE: 	
+-
++		case KEYWORD_TEMPLATE:
 +			if(isLanguage(Lang_d))
 +				st->declaration = DECL_TEMPLATE;
 +			break;
  		case KEYWORD_NAMESPACE: readPackageOrNamespace (st, DECL_NAMESPACE); break;
 +		case KEYWORD_MODULE:
  		case KEYWORD_PACKAGE:   readPackageOrNamespace (st, DECL_PACKAGE);   break;
- 		
+
  		case KEYWORD_EVENT:
  			if (isLanguage (Lang_csharp))
  				st->declaration = DECL_EVENT;
  			break;
 -
-+		
++
 +		case KEYWORD_ALIAS:
  		case KEYWORD_TYPEDEF:
  			reinitStatement (st, FALSE);
@@ -630,7 +630,7 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  					if (isType (prev2, TOKEN_NAME))
  						copyToken (st->blockName, prev2);
 -					qualifyFunctionTag (st, prev2);
-+					
++
 +					if( st->declaration == DECL_CLASS)
 +						qualifyBlockTag (st, prev2);
 +					else
@@ -651,10 +651,10 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
  static void initializeCppParser (const langType language)
  {
  	Lang_cpp = language;
-@@ -2851,16 +2989,23 @@
+@@ -2851,2 +2989,2 @@
  	buildKeywordHash (language, 2);
  }
- 
+
 +static void initializeDParser (const langType language)
 +{
 +	Lang_d = language;
@@ -668,22 +668,22 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 -	buildKeywordHash (language, 3);
 +	buildKeywordHash (language, 4);
  }
- 
+
  static void initializeVeraParser (const langType language)
  {
  	Lang_vera = language;
 -	buildKeywordHash (language, 4);
 +	buildKeywordHash (language, 5);
  }
- 
+
  extern parserDefinition* CParser (void)
-@@ -2875,6 +3020,18 @@
+@@ -2875,2 +3020,2 @@
  	return def;
  }
- 
+
 +extern parserDefinition* DParser (void)
 +{
-+     static const char *const extensions [] = { "d", NULL };
++     static const char *const extensions [] = { "d", "di", NULL };
 +     parserDefinition* def = parserNew ("D");
 +     def->kinds      = CKinds;
 +     def->kindCount  = KIND_COUNT (CKinds);
@@ -691,8 +691,8 @@ diff -u ctags-5.8.orig//c.c ctags-5.8//c.c
 +     def->parser2    = findCTags;
 +     def->initialize = initializeDParser;
 +	return def;
-+} 
-+ 
++}
++
  extern parserDefinition* CppParser (void)
  {
  	static const char *const extensions [] = {
