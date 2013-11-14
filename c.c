@@ -2051,6 +2051,7 @@ static boolean skipPostArgumentStuff (
 				{
 				case KEYWORD_ATTRIBUTE: skipParens ();  break;
 				case KEYWORD_THROW:     skipParens ();  break;
+				case KEYWORD_IF:        if (isLanguage (Lang_d)) skipParens ();  break;
 				case KEYWORD_TRY:                       break;
 
 				case KEYWORD_CONST:
